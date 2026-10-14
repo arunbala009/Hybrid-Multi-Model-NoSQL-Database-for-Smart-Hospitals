@@ -28,7 +28,7 @@ services:
       - key: NEO4J_PASSWORD
         sync: false
       - key: NEO4J_DATABASE
-        value: neo4j
+        value: c16ff73e
       - key: DEMO_SEED_TOKEN
         sync: false
       - key: CORS_ORIGINS

@@ -53,7 +53,7 @@ Set these in the **Environment** tab of the Render Web Service:
 | `NEO4J_URI` | Yes | Dedicated hospital AuraDB URI (`neo4j+s://<id>.databases.neo4j.io`) |
 | `NEO4J_USERNAME` | Yes | `neo4j` |
 | `NEO4J_PASSWORD` | Yes | Password from your dedicated hospital AuraDB instance |
-| `NEO4J_DATABASE` | Yes | `neo4j` |
+| `NEO4J_DATABASE` | Yes | Verified dedicated database name (`c16ff73e`) |
 | `ENVIRONMENT` | Yes | `production` |
 | `DEBUG` | Yes | `false` |
 | `DEMO_SEED_TOKEN` | Yes | Secret token for authorized demo seeding (e.g., `hospital-academic-demo-key-2026`) |

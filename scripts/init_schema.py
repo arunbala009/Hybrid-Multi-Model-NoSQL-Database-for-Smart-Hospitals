@@ -223,14 +223,30 @@ def main():
         password = os.getenv("NEO4J_PASSWORD")
         database = os.getenv("NEO4J_DATABASE", "neo4j")
 
-        if not uri or not password or password == "your-secure-password":
+        if not uri or not password or password in ("your-secure-password", "PASTE_ROTATED_PASSWORD_HERE"):
             logger.error("Invalid or placeholder credentials in environment. Aborting execution.")
             sys.exit(1)
 
-        logger.info("Connecting to Neo4j instance at %s...", uri.split("@")[-1])
+        # Enforce strict instance isolation
+        if "f8d31ac5" in uri.lower():
+            logger.error("CRITICAL: Target URI points to forbidden legacy instance 'f8d31ac5'. Aborting immediately.")
+            sys.exit(1)
+        if "c16ff73e" not in uri.lower():
+            logger.error("Target instance ID 'c16ff73e' was not found in NEO4J_URI. Aborting execution.")
+            sys.exit(1)
+
+        logger.info("Connecting to dedicated Neo4j instance at [c16ff73e]...")
         driver = GraphDatabase.driver(uri, auth=(username, password))
         driver.verify_connectivity()
-        logger.info("Connected successfully. Verifying database isolation...")
+        logger.info("Connected successfully. Verifying database isolation on '%s'...", database)
+
+        # Pre-flight emptiness check
+        with driver.session(database=database) as session:
+            count_res = session.run("MATCH (n) RETURN count(n) AS total").single()
+            total_nodes = count_res["total"] if count_res else 0
+            logger.info("Pre-flight node count on target database: %d", total_nodes)
+            if total_nodes > 0:
+                logger.warning("Target database is not empty (%d existing nodes).", total_nodes)
 
         applied = apply_schema(driver, database=database)
         driver.close()
