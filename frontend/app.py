@@ -78,8 +78,9 @@ def main():
         health = client.check_health()
         if health["success"]:
             hdata = health["data"] or {}
-            db_status = hdata.get("database", "connected")
-            st.success(f"🟢 **Backend Online** ({client.base_url})\n\nDB Status: `{db_status}`")
+            db_info = hdata.get("database", {})
+            db_state = db_info.get("state", "connected") if isinstance(db_info, dict) else str(db_info)
+            st.success(f"🟢 **Backend Online** ({client.base_url})\n\nDB Status: `{db_state}`")
         else:
             st.error(f"🔴 **Backend Offline** ({client.base_url})\n\n{health['error']}")
             st.caption("Ensure FastAPI is running: `uvicorn backend.app.main:app --port 8000`")

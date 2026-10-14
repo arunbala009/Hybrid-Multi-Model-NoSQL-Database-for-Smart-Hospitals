@@ -19,11 +19,16 @@ class Settings(BaseSettings):
     NEO4J_DATABASE: str = Field(default="neo4j")
 
     # API Configuration
+    PORT: Optional[int] = Field(default=None, description="Render dynamic port binding")
     API_BASE_URL: str = Field(default="http://localhost:8000")
     API_HOST: str = Field(default="0.0.0.0")
     API_PORT: int = Field(default=8000)
     ENVIRONMENT: str = Field(default="development")
     DEBUG: bool = Field(default=False)
+
+    @property
+    def effective_port(self) -> int:
+        return self.PORT or self.API_PORT
 
     # Security & Demo Authorization
     DEMO_SEED_TOKEN: str = Field(

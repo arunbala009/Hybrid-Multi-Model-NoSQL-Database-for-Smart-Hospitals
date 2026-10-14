@@ -76,6 +76,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(RuntimeError)
+async def database_runtime_exception_handler(request, exc: RuntimeError):
+    """Gracefully captures database connection failures without crashing the API."""
+    from fastapi.responses import JSONResponse
+    msg = str(exc)
+    if "database" in msg.lower() or "driver" in msg.lower():
+        logger.warning("Database unavailable on route %s: %s", request.url.path, msg)
+        return JSONResponse(
+            status_code=503,
+            content={
+                "detail": f"Database service unavailable: {msg}",
+                "status": "degraded"
+            }
+        )
+    return JSONResponse(status_code=500, content={"detail": msg})
+
+
 # Include API Routers
 app.include_router(health_router)
 app.include_router(patients_router)
@@ -119,4 +137,4 @@ def root_index():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.app.main:app", host=settings.API_HOST, port=settings.API_PORT, reload=settings.DEBUG)
+    uvicorn.run("backend.app.main:app", host=settings.API_HOST, port=settings.effective_port, reload=settings.DEBUG)
