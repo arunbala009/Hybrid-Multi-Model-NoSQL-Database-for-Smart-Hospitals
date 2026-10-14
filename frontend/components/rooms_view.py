@@ -8,7 +8,10 @@ Distinguishes active admissions from historical encounters.
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from frontend.api_client import HospitalAPIClient
+try:
+    from frontend.api_client import HospitalAPIClient
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
 
 
 def render_rooms(client: HospitalAPIClient):

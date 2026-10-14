@@ -8,7 +8,10 @@ validated patient registration, and safe patient record deletion.
 import streamlit as st
 import pandas as pd
 from typing import Optional
-from frontend.api_client import HospitalAPIClient
+try:
+    from frontend.api_client import HospitalAPIClient
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
 
 
 def render_patients(client: HospitalAPIClient):

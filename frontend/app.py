@@ -5,18 +5,36 @@ Streamlit Frontend Entry Point
 Academic Project: Hybrid Multi-Model NoSQL Database for Smart Hospitals
 """
 
-import streamlit as st
 import os
+import sys
+from pathlib import Path
+import streamlit as st
 
-from frontend.api_client import HospitalAPIClient
-from frontend.components.overview_view import render_overview
-from frontend.components.patients_view import render_patients
-from frontend.components.doctors_view import render_doctors
-from frontend.components.encounters_view import render_encounters
-from frontend.components.rooms_view import render_rooms
-from frontend.components.graph_view import render_graph_explorer
-from frontend.components.analytics_view import render_analytics
-from frontend.components.demo_view import render_demo
+# Ensure repository root is in sys.path so 'frontend' package is resolvable
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+try:
+    from frontend.api_client import HospitalAPIClient
+    from frontend.components.overview_view import render_overview
+    from frontend.components.patients_view import render_patients
+    from frontend.components.doctors_view import render_doctors
+    from frontend.components.encounters_view import render_encounters
+    from frontend.components.rooms_view import render_rooms
+    from frontend.components.graph_view import render_graph_explorer
+    from frontend.components.analytics_view import render_analytics
+    from frontend.components.demo_view import render_demo
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
+    from components.overview_view import render_overview
+    from components.patients_view import render_patients
+    from components.doctors_view import render_doctors
+    from components.encounters_view import render_encounters
+    from components.rooms_view import render_rooms
+    from components.graph_view import render_graph_explorer
+    from components.analytics_view import render_analytics
+    from components.demo_view import render_demo
 
 
 # Page Configuration

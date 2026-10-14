@@ -10,7 +10,10 @@ import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
 from typing import Optional, Dict, Any, List
-from frontend.api_client import HospitalAPIClient
+try:
+    from frontend.api_client import HospitalAPIClient
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
 
 
 def build_plotly_graph(G: nx.Graph, title: str) -> go.Figure:

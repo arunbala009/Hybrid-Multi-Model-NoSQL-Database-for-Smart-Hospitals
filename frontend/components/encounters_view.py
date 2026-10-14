@@ -8,7 +8,10 @@ and document-style medical records (vital signs, clinical notes, lab tests).
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timezone
-from frontend.api_client import HospitalAPIClient
+try:
+    from frontend.api_client import HospitalAPIClient
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
 
 
 def render_encounters(client: HospitalAPIClient):

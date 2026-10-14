@@ -7,7 +7,10 @@ Physician registry, department staffing analysis, and caseload tracking.
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from frontend.api_client import HospitalAPIClient
+try:
+    from frontend.api_client import HospitalAPIClient
+except ModuleNotFoundError:
+    from api_client import HospitalAPIClient
 
 
 def render_doctors(client: HospitalAPIClient):
