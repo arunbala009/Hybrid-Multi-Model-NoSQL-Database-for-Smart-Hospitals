@@ -12,6 +12,14 @@ try:
 except ModuleNotFoundError:
     from api_client import HospitalAPIClient
 
+try:
+    from frontend.components.chart_helper import render_plotly_chart
+except ModuleNotFoundError:
+    try:
+        from components.chart_helper import render_plotly_chart
+    except ModuleNotFoundError:
+        from chart_helper import render_plotly_chart
+
 
 def render_overview(client: HospitalAPIClient):
     st.subheader("🏥 Hospital Operational Overview")
@@ -71,7 +79,7 @@ def render_overview(client: HospitalAPIClient):
                 font_color="#F8FAFC",
                 xaxis_tickangle=-30
             )
-            st.plotly_chart(fig, use_container_width=True)
+            render_plotly_chart(fig, height=380)
         else:
             st.info("No doctor caseload data available yet. Seed the database to view live metrics.")
 
@@ -93,7 +101,7 @@ def render_overview(client: HospitalAPIClient):
                 paper_bgcolor="rgba(0,0,0,0)",
                 font_color="#F8FAFC"
             )
-            st.plotly_chart(fig_dept, use_container_width=True)
+            render_plotly_chart(fig_dept, height=380)
         else:
             st.info("No department volume data available yet.")
 

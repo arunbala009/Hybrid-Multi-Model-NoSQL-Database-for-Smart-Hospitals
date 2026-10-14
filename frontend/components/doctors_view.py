@@ -12,6 +12,14 @@ try:
 except ModuleNotFoundError:
     from api_client import HospitalAPIClient
 
+try:
+    from frontend.components.chart_helper import render_plotly_chart
+except ModuleNotFoundError:
+    try:
+        from components.chart_helper import render_plotly_chart
+    except ModuleNotFoundError:
+        from chart_helper import render_plotly_chart
+
 
 def render_doctors(client: HospitalAPIClient):
     st.subheader("👨‍⚕️ Medical Staff & Clinical Departments")
@@ -163,7 +171,7 @@ def render_doctors(client: HospitalAPIClient):
                     text_auto=True
                 )
                 fig_wl.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC", xaxis_tickangle=-30)
-                st.plotly_chart(fig_wl, use_container_width=True)
+                render_plotly_chart(fig_wl, height=380)
             else:
                 st.info("No workload analytics available yet.")
 
@@ -184,7 +192,7 @@ def render_doctors(client: HospitalAPIClient):
                     text_auto=True
                 )
                 fig_ds.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-                st.plotly_chart(fig_ds, use_container_width=True)
+                render_plotly_chart(fig_ds, height=380)
             else:
                 st.info("No department workload analytics available yet.")
 

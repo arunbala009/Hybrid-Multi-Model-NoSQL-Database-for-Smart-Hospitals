@@ -15,6 +15,14 @@ try:
 except ModuleNotFoundError:
     from api_client import HospitalAPIClient
 
+try:
+    from frontend.components.chart_helper import render_plotly_chart
+except ModuleNotFoundError:
+    try:
+        from components.chart_helper import render_plotly_chart
+    except ModuleNotFoundError:
+        from chart_helper import render_plotly_chart
+
 
 def build_plotly_graph(G: nx.Graph, title: str) -> go.Figure:
     """Renders a NetworkX graph using Plotly 2D scatter with spring layout."""
@@ -222,7 +230,7 @@ def render_graph_explorer(client: HospitalAPIClient):
 
         st.write(f"Rendered Graph Topology: **{G.number_of_nodes()}** Nodes, **{G.number_of_edges()}** Relationships")
         fig = build_plotly_graph(G, "Hospital Care Pathways Network")
-        st.plotly_chart(fig, use_container_width=True)
+        render_plotly_chart(fig, height=520)
 
         # Tabular breakdown
         with st.expander("📊 View Raw Pathway Traversal Data", expanded=False):
@@ -316,7 +324,7 @@ def render_graph_explorer(client: HospitalAPIClient):
                 G_contact.add_edge(p1_id, p2_id, rel="CO_OCCUPANT")
 
         fig_contact = build_plotly_graph(G_contact, "Simulated Room Co-Occupancy Network")
-        st.plotly_chart(fig_contact, use_container_width=True)
+        render_plotly_chart(fig_contact, height=520)
 
         # Tabular details
         with st.expander("📋 View Overlapping Admission Details", expanded=True):

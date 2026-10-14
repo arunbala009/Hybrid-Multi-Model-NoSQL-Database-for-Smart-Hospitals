@@ -13,6 +13,14 @@ try:
 except ModuleNotFoundError:
     from api_client import HospitalAPIClient
 
+try:
+    from frontend.components.chart_helper import render_plotly_chart
+except ModuleNotFoundError:
+    try:
+        from components.chart_helper import render_plotly_chart
+    except ModuleNotFoundError:
+        from chart_helper import render_plotly_chart
+
 
 def render_analytics(client: HospitalAPIClient):
     st.subheader("📈 Clinical & Operational Analytics Dashboard")
@@ -57,7 +65,7 @@ def render_analytics(client: HospitalAPIClient):
                         text_auto=True
                     )
                     fig1.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC", xaxis_tickangle=-30)
-                    st.plotly_chart(fig1, use_container_width=True)
+                    render_plotly_chart(fig1, height=380)
 
                 with c2:
                     fig2 = px.bar(
@@ -70,7 +78,7 @@ def render_analytics(client: HospitalAPIClient):
                         text_auto=True
                     )
                     fig2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC", xaxis_tickangle=-30)
-                    st.plotly_chart(fig2, use_container_width=True)
+                    render_plotly_chart(fig2, height=380)
 
                 st.markdown("##### Detailed Physician Workload Matrix")
                 st.dataframe(
@@ -115,7 +123,7 @@ def render_analytics(client: HospitalAPIClient):
                         hole=0.45
                     )
                     fig_d1.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-                    st.plotly_chart(fig_d1, use_container_width=True)
+                    render_plotly_chart(fig_d1, height=380)
 
                 with col_d2:
                     fig_d2 = px.bar(
@@ -128,7 +136,7 @@ def render_analytics(client: HospitalAPIClient):
                         text_auto=True
                     )
                     fig_d2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-                    st.plotly_chart(fig_d2, use_container_width=True)
+                    render_plotly_chart(fig_d2, height=380)
 
                 st.dataframe(
                     df_dept[["department_name", "building", "floor", "total_physicians", "total_encounters", "active_cases"]],
@@ -177,7 +185,7 @@ def render_analytics(client: HospitalAPIClient):
                     labels={"value": "Beds", "room_number": "Room", "variable": "Metric"}
                 )
                 fig_ro.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC", xaxis_tickangle=-45)
-                st.plotly_chart(fig_ro, use_container_width=True)
+                render_plotly_chart(fig_ro, height=420)
             else:
                 st.info("No room data recorded.")
 
@@ -205,7 +213,7 @@ def render_analytics(client: HospitalAPIClient):
                         hole=0.4
                     )
                     fig_types.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-                    st.plotly_chart(fig_types, use_container_width=True)
+                    render_plotly_chart(fig_types, height=380)
 
                 with col_tp2:
                     # Explode diagnoses
@@ -225,7 +233,7 @@ def render_analytics(client: HospitalAPIClient):
                             text_auto=True
                         )
                         fig_diag.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC", yaxis=dict(autorange="reversed"))
-                        st.plotly_chart(fig_diag, use_container_width=True)
+                        render_plotly_chart(fig_diag, height=380)
                     else:
                         st.info("No recorded diagnoses to display.")
 
@@ -268,7 +276,7 @@ def render_analytics(client: HospitalAPIClient):
                     labels={"room_number": "Room Number", "count": "Co-Occupancy Stays"}
                 )
                 fig_rooms.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-                st.plotly_chart(fig_rooms, use_container_width=True)
+                render_plotly_chart(fig_rooms, height=380)
 
                 st.dataframe(
                     df_pairs[["room_number", "room_type", "patient_1_name", "patient_1_admit", "patient_2_name", "patient_2_admit"]],

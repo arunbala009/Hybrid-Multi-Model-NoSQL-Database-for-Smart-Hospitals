@@ -13,6 +13,14 @@ try:
 except ModuleNotFoundError:
     from api_client import HospitalAPIClient
 
+try:
+    from frontend.components.chart_helper import render_plotly_chart
+except ModuleNotFoundError:
+    try:
+        from components.chart_helper import render_plotly_chart
+    except ModuleNotFoundError:
+        from chart_helper import render_plotly_chart
+
 
 def render_rooms(client: HospitalAPIClient):
     st.subheader("🛏️ Hospital Rooms & Bed Allocation")
@@ -100,7 +108,7 @@ def render_rooms(client: HospitalAPIClient):
                 labels={"capacity": "Beds", "room_type": "Acuity Level"}
             )
             fig_types.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-            st.plotly_chart(fig_types, use_container_width=True)
+            render_plotly_chart(fig_types, height=360)
 
         with col_c2:
             fig_floor = px.pie(
@@ -111,7 +119,7 @@ def render_rooms(client: HospitalAPIClient):
                 hole=0.4
             )
             fig_floor.update_layout(paper_bgcolor="rgba(0,0,0,0)", font_color="#F8FAFC")
-            st.plotly_chart(fig_floor, use_container_width=True)
+            render_plotly_chart(fig_floor, height=360)
 
         # 4. Room Historical vs Active Stays Inspector
         st.markdown("---")
