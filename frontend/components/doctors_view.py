@@ -154,7 +154,7 @@ def render_doctors(client: HospitalAPIClient):
                     df_wl,
                     x="doctor_name",
                     y="total_encounters",
-                    color="department_name",
+                    color="department" if "department" in df_wl.columns else ("department_name" if "department_name" in df_wl.columns else None),
                     labels={"doctor_name": "Doctor", "total_encounters": "Total Encounters Handled"},
                     title="Encounters per Physician by Department",
                     text_auto=True
@@ -170,12 +170,13 @@ def render_doctors(client: HospitalAPIClient):
             if ds_res["success"] and ds_res["data"] and ds_res["data"].get("departments"):
                 dstats = ds_res["data"]["departments"]
                 df_ds = pd.DataFrame(dstats)
+                doc_cnt_col = "total_physicians" if "total_physicians" in df_ds.columns else ("doctor_count" if "doctor_count" in df_ds.columns else None)
                 fig_ds = px.bar(
                     df_ds,
                     x="department_name",
                     y="total_encounters",
-                    color="doctor_count",
-                    labels={"department_name": "Department", "total_encounters": "Patient Encounters", "doctor_count": "Staff Doctors"},
+                    color=doc_cnt_col,
+                    labels={"department_name": "Department", "total_encounters": "Patient Encounters", (doc_cnt_col or "total_physicians"): "Staff Doctors"},
                     title="Total Encounters per Clinical Department",
                     text_auto=True
                 )

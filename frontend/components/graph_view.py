@@ -105,8 +105,7 @@ def build_plotly_graph(G: nx.Graph, title: str) -> go.Figure:
     fig = go.Figure(
         data=[edge_trace, node_trace],
         layout=go.Layout(
-            title=title,
-            titlefont=dict(size=16, color="#F8FAFC"),
+            title=dict(text=title, font=dict(size=16, color="#F8FAFC")),
             showlegend=False,
             hovermode="closest",
             margin=dict(b=20, l=20, r=20, t=50),

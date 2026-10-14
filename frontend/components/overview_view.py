@@ -84,7 +84,7 @@ def render_overview(client: HospitalAPIClient):
                 values="total_encounters",
                 title="Clinical Encounters by Department",
                 hole=0.4,
-                color_discrete_sequence=px.colors.qualitative.Teal
+                color_discrete_sequence=px.colors.sequential.Teal
             )
             fig_dept.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
