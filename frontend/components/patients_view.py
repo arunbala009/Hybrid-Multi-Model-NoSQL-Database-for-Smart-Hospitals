@@ -225,25 +225,34 @@ def render_patients(client: HospitalAPIClient):
             with col_ph:
                 new_phone = st.text_input("Contact Phone", placeholder="+1-555-0144")
             with col_em:
-                new_em = st.text_input("Emergency Contact", placeholder="Bob Wong (+1-555-0145)")
+                new_em = st.text_input("Emergency Contact *", placeholder="Bob Wong (+1-555-0145)")
 
             submit_patient = st.form_submit_button("✨ Register Patient")
 
             if submit_patient:
-                # Validation
-                if not new_fn.strip() or not new_ln.strip():
-                    st.error("Validation Error: First Name and Last Name are required.")
-                elif not new_dob.strip():
+                fn_clean = new_fn.strip()
+                ln_clean = new_ln.strip()
+                dob_clean = new_dob.strip()
+                em_clean = new_em.strip()
+                ph_clean = new_phone.strip()
+
+                if len(fn_clean) < 2 or fn_clean.isdigit() or not any(c.isalpha() for c in fn_clean):
+                    st.error("Validation Error: First Name must contain at least 2 characters and cannot be numeric-only.")
+                elif len(ln_clean) < 2 or ln_clean.isdigit() or not any(c.isalpha() for c in ln_clean):
+                    st.error("Validation Error: Last Name must contain at least 2 characters and cannot be numeric-only.")
+                elif not dob_clean:
                     st.error("Validation Error: Date of birth (YYYY-MM-DD) is required.")
+                elif len(em_clean) < 2 or not any(c.isalpha() for c in em_clean):
+                    st.error("Validation Error: A meaningful Emergency Contact name is required.")
                 else:
                     payload = {
-                        "first_name": new_fn.strip(),
-                        "last_name": new_ln.strip(),
-                        "dob": new_dob.strip(),
+                        "first_name": fn_clean,
+                        "last_name": ln_clean,
+                        "dob": dob_clean,
                         "gender": new_gen,
                         "blood_group": new_bg,
-                        "contact_phone": new_phone.strip() if new_phone.strip() else None,
-                        "emergency_contact": new_em.strip() if new_em.strip() else None
+                        "contact_phone": ph_clean if ph_clean else None,
+                        "emergency_contact": em_clean
                     }
                     if new_pid.strip():
                         payload["patient_id"] = new_pid.strip()

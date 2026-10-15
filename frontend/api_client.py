@@ -81,6 +81,17 @@ class HospitalAPIClient:
 
             # Handle 4xx / 5xx responses
             detail = body.get("detail", str(body)) if isinstance(body, dict) else str(body)
+            if isinstance(detail, list):
+                msgs = []
+                for item in detail:
+                    if isinstance(item, dict) and "msg" in item:
+                        m = item["msg"]
+                        if m.startswith("Value error, "):
+                            m = m[len("Value error, "):]
+                        msgs.append(m)
+                    else:
+                        msgs.append(str(item))
+                detail = "; ".join(msgs)
             return {
                 "success": False,
                 "data": None,
