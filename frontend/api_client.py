@@ -18,7 +18,7 @@ except ImportError:
 class HospitalAPIClient:
     """Encapsulates all RESTful communication with the Smart Hospital FastAPI backend."""
 
-    def __init__(self, base_url: Optional[str] = None):
+    def __init__(self, base_url: Optional[str] = None, timeout: Optional[Any] = None):
         if base_url:
             self.base_url = base_url.rstrip("/")
         else:
@@ -35,7 +35,11 @@ class HospitalAPIClient:
 
             self.base_url = url.rstrip("/")
 
-        self.timeout = (5.0, 20.0)  # (connect timeout, read timeout)
+        if timeout:
+            self.timeout = timeout
+        else:
+            # Sensible timeouts for cloud deployments (15s connect, 30s read) to accommodate cold starts
+            self.timeout = (15.0, 30.0)
 
     def _request(
         self,
@@ -110,7 +114,11 @@ class HospitalAPIClient:
     # Health Diagnostics
     # --------------------------------------------------------------------------
     def check_health(self) -> Dict[str, Any]:
-        return self._request("GET", "/health")
+        res = self._request("GET", "/health")
+        # Cold-start resilience: if initial attempt hit a timeout, retry once
+        if not res["success"] and res.get("status_code") == 504:
+            res = self._request("GET", "/health")
+        return res
 
     # --------------------------------------------------------------------------
     # Patients

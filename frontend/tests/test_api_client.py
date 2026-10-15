@@ -36,7 +36,7 @@ def test_check_health_success(client):
             params=None,
             json=None,
             headers={"Accept": "application/json"},
-            timeout=(5.0, 20.0)
+            timeout=client.timeout
         )
 
 
